@@ -14,13 +14,16 @@ type Page struct {
 	Body  []byte
 }
 
+var templatePath = "templates/"
+var pagesPath = "pages/"
+
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	filename := pagesPath + p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := pagesPath + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -30,7 +33,6 @@ func loadPage(title string) (*Page, error) {
 
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
-var templatePath = "templates/"
 var templates = template.Must(template.ParseFiles(templatePath+"edit.html", templatePath+"view.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
